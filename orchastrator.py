@@ -275,9 +275,43 @@ def main():
             print("\n❌ Collection finished, but no data was extracted. Please check the logs.")
     else:
         print("\n❌ Data collection failed critically.")
-        
+
     elapsed_time = time.time() - start_time
     print(f"\n⏱️  Total collection time: {elapsed_time:.2f} seconds")
 
+    return final_data
+
 if __name__ == "__main__":
-    main()
+    from metadata_writer import create_metadata_file
+    from package_creator import create_package
+    
+    result = main()
+    
+    if result and result.get('trade_date'):
+        trade_date = result['trade_date']
+        timestamp = datetime.strptime(trade_date, OUTPUT_DATE_FORMAT).strftime('%Y%m%d')
+        
+        # File names
+        data_file = f'RUSSD_DATA_{timestamp}.xlsx'
+        meta_file = f'RUSSD_META_{timestamp}.xls'
+        
+        # Create metadata file
+        print("\n" + "="*80)
+        print("CREATING METADATA FILE")
+        print("="*80)
+        create_metadata_file(trade_date)
+        
+        # Create ZIP package
+        print("\n" + "="*80)
+        print("CREATING ZIP PACKAGE")
+        print("="*80)
+        create_package(data_file, meta_file)
+        
+        print("\n" + "="*80)
+        print("🎉 COMPLETE RUSSD PACKAGE READY!")
+        print("="*80)
+        print(f"📦 Files created:")
+        print(f"   - {data_file}")
+        print(f"   - {meta_file}")
+        print(f"   - RUSSD_{timestamp}.ZIP")
+        print("="*80)

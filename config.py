@@ -78,6 +78,12 @@ EXCEL_HEADERS = {
 
 DATA_COLUMNS = list(EXCEL_HEADERS.keys())
 
+# =============================================================================
+# METADATA CONFIGURATION
+# =============================================================================
+DATA_FREQUENCY = 'Daily'
+DATA_SOURCE_NAME = 'Central Bank of Russia'
+
 def get_column_mapping_by_source(source: str, settlement: str):
     """Gets the list of Excel columns for a given source and settlement type."""
     mapping = {
